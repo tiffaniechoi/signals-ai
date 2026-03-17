@@ -11,6 +11,8 @@ Type in any ticker. In seconds, Signal pulls live price data and the latest news
 
 No subscriptions. No paywalls. No finance degree required. Just the signal.
 
+![Signals Preview](assets/signals_preview.png)
+
 ## What It Does
 - **Markets page** - a live dashboard of trending tickers auto-analyzed on load
 - **My Watchlist** - add any stock, ETF, index, or crypto; your list is saved locally and persists between visits
