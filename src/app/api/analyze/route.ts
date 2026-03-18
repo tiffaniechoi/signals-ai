@@ -28,6 +28,7 @@ async function fetchQuote(ticker: string): Promise<StockQuote | null> {
           Accept: "application/json",
         },
         next: { revalidate: 0 },
+        signal: AbortSignal.timeout(5000),
       }
     );
     if (!res.ok) return null;
@@ -65,6 +66,7 @@ async function fetchNews(ticker: string, companyName?: string): Promise<NewsItem
           Accept: "application/json",
         },
         next: { revalidate: 0 },
+        signal: AbortSignal.timeout(5000),
       }
     );
     if (!res.ok) return [];
@@ -150,10 +152,11 @@ Respond with ONLY valid JSON in exactly this structure:
       model: GROQ_MODEL,
       messages: [{ role: "user", content: prompt }],
       temperature: 0.3,
-      max_tokens: 1024,
+      max_tokens: 400,
       // Native JSON mode — guarantees valid JSON output without regex cleanup
       response_format: { type: "json_object" },
     }),
+    signal: AbortSignal.timeout(15000),
   });
 
   if (!res.ok) {
@@ -194,7 +197,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid ticker." }, { status: 400 });
   }
 
-  const quote = await fetchQuote(ticker);
+  const [quote, newsRaw] = await Promise.all([
+    fetchQuote(ticker),
+    fetchNews(ticker),
+  ]);
+
   if (!quote) {
     return NextResponse.json(
       { error: `Ticker "${ticker}" not found on Yahoo Finance.` },
@@ -202,7 +209,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const news = await fetchNews(ticker, quote.name);
+  // Re-filter news with company name now that we have the quote
+  const news = newsRaw.length > 0 ? newsRaw : await fetchNews(ticker, quote.name);
 
   let sentiment: SentimentAnalysis;
   try {
