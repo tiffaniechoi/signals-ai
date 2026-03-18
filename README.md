@@ -11,8 +11,8 @@ Type in any ticker. In seconds, Signal pulls live price data and the latest news
 
 No subscriptions. No paywalls. No finance degree required. Just the signal.
 
+## Preview 
 Live Site here: [Signals AI Site](https://signalsai.vercel.app/)
-
 
 ![Signals Preview](assets/signals_preview.png)
 

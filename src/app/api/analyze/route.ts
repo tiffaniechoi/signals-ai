@@ -55,7 +55,7 @@ async function fetchQuote(ticker: string): Promise<StockQuote | null> {
 }
 
 /** Fetches up to 5 recent news headlines for a ticker from Yahoo Finance. Returns [] on any error. */
-async function fetchNews(ticker: string): Promise<NewsItem[]> {
+async function fetchNews(ticker: string, companyName?: string): Promise<NewsItem[]> {
   try {
     const res = await fetch(
       `https://query2.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(ticker)}&newsCount=10&quotesCount=0`,
@@ -69,15 +69,36 @@ async function fetchNews(ticker: string): Promise<NewsItem[]> {
     );
     if (!res.ok) return [];
     const data = await res.json();
-    const items: NewsItem[] = (data?.news ?? []).slice(0, 5).map(
-      (n: { title?: string; publisher?: string; link?: string; providerPublishTime?: number }) => ({
-        title: n.title ?? "",
-        publisher: n.publisher ?? "",
-        url: n.link ?? "",
-        providerPublishTime: n.providerPublishTime ?? 0,
+    const upperTicker = ticker.toUpperCase();
+    // Build a list of name keywords to match against (e.g. ["Microsoft"] from "Microsoft Corporation")
+    const nameKeywords = companyName
+      ? companyName.split(/[\s,./]+/).filter((w) => w.length > 2).map((w) => w.toLowerCase())
+      : [];
+
+    const allNews: NewsItem[] = (data?.news ?? [])
+      .filter((n: { title?: string; summary?: string; relatedTickers?: string[] }) => {
+        // Accept if ticker is in relatedTickers
+        const tickers: string[] = n.relatedTickers ?? [];
+        if (tickers.length > 0 && tickers.some((t) => t.toUpperCase() === upperTicker)) return true;
+        // Accept if ticker or any company name keyword appears in the title or summary
+        const text = `${n.title ?? ""} ${n.summary ?? ""}`.toLowerCase();
+        if (text.includes(upperTicker.toLowerCase())) return true;
+        if (nameKeywords.some((kw) => text.includes(kw))) return true;
+        // Reject if relatedTickers is populated but none matched (unrelated article)
+        if (tickers.length > 0) return false;
+        // No relatedTickers and no text match — keep as fallback
+        return true;
       })
-    );
-    return items;
+      .slice(0, 5)
+      .map(
+        (n: { title?: string; publisher?: string; link?: string; providerPublishTime?: number }) => ({
+          title: n.title ?? "",
+          publisher: n.publisher ?? "",
+          url: n.link ?? "",
+          providerPublishTime: n.providerPublishTime ?? 0,
+        })
+      );
+    return allNews;
   } catch {
     return [];
   }
@@ -181,7 +202,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const news = await fetchNews(ticker);
+  const news = await fetchNews(ticker, quote.name);
 
   let sentiment: SentimentAnalysis;
   try {
