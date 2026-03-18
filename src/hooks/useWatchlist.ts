@@ -51,13 +51,6 @@ export function useWatchlist() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [addError, setAddError] = useState<string | null>(null);
 
-  // Hydrate from localStorage on mount and auto-analyze all tickers
-  useEffect(() => {
-    const saved = loadFromStorage();
-    setWatchlist(saved);
-    saved.forEach((s) => analyzeTickerInternal(s.ticker));
-  }, [analyzeTickerInternal]);
-
   // Persist watchlist to localStorage
   useEffect(() => {
     saveToStorage(watchlist);
@@ -93,6 +86,13 @@ export function useWatchlist() {
       });
     }
   }, []);
+
+  // Hydrate from localStorage on mount and auto-analyze all tickers
+  useEffect(() => {
+    const saved = loadFromStorage();
+    setWatchlist(saved);
+    saved.forEach((s) => analyzeTickerInternal(s.ticker));
+  }, [analyzeTickerInternal]);
 
   const addTicker = useCallback(
     async (rawTicker: string) => {
