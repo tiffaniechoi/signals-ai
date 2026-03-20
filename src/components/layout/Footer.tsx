@@ -1,7 +1,7 @@
 /** Site footer with financial disclaimer and data-source attribution. */
 export function Footer() {
   return (
-    <footer style={{ borderTop: "1px solid #E4E1DA", padding: "1.5rem 3rem", backgroundColor: "#FFFFFF" }}>
+    <footer className="footer-padding" style={{ borderTop: "1px solid #E4E1DA", backgroundColor: "#FFFFFF" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" }}>
         <p style={{ fontFamily: "var(--font-space-grotesk), sans-serif", fontSize: "0.85rem", color: "#A1A1AA", margin: 0 }}>
           ⚠ Not financial advice — for informational purposes only.

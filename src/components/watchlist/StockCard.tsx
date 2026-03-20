@@ -103,7 +103,7 @@ export function StockCard({ analysis, onRemove, onRefresh, readOnly = false }: S
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
-              maxWidth: "200px",
+              maxWidth: "min(200px, 40vw)",
             }}
           >
             {quote.name}
@@ -114,7 +114,7 @@ export function StockCard({ analysis, onRemove, onRefresh, readOnly = false }: S
           <div
             style={{
               fontFamily: "var(--font-jetbrains-mono), monospace",
-              fontSize: "2rem",
+              fontSize: "clamp(1.5rem, 5vw, 2rem)",
               fontWeight: 700,
               color: "#18181B",
               letterSpacing: "0.01em",

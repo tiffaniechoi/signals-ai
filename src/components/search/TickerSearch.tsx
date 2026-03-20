@@ -104,7 +104,7 @@ export function TickerSearch({ onAdd, isLoading, error, onClearError }: TickerSe
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-      <div style={{ position: "relative", maxWidth: "640px" }}>
+      <div style={{ maxWidth: "640px", width: "100%" }}>
         <form onSubmit={handleSubmit} style={{ display: "flex", gap: "0.75rem" }}>
           <div style={{ position: "relative", flex: 1 }}>
             <input
@@ -143,6 +143,88 @@ export function TickerSearch({ onAdd, isLoading, error, onClearError }: TickerSe
                 …
               </span>
             )}
+            {/* Autocomplete dropdown */}
+            {showDropdown && suggestions.length > 0 && (
+              <div
+                ref={dropdownRef}
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  right: 0,
+                  backgroundColor: "#FFFFFF",
+                  border: "1.5px solid #2563EB",
+                  borderTop: "1px solid #E4E1DA",
+                  borderRadius: "0 0 0.625rem 0.625rem",
+                  overflow: "hidden",
+                  zIndex: 100,
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.1), 0 0 0 3px rgba(37,99,235,0.08)",
+                }}
+              >
+                {suggestions.map((s, i) => {
+                  const ts = TYPE_STYLE[s.type] ?? { color: "#71717A", bg: "#F9F9F8" };
+                  return (
+                    <div
+                      key={s.ticker}
+                      onMouseDown={() => handleSelect(s.ticker)}
+                      onMouseEnter={() => setHighlighted(i)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1rem",
+                        padding: "0.75rem 1.25rem",
+                        cursor: "pointer",
+                        backgroundColor: i === highlighted ? "#F8F7FF" : "transparent",
+                        borderBottom: i < suggestions.length - 1 ? "1px solid #F4F2ED" : "none",
+                        transition: "background-color 0.1s",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "var(--font-jetbrains-mono), monospace",
+                          fontSize: "0.95rem",
+                          fontWeight: 700,
+                          color: "#18181B",
+                          letterSpacing: "0.08em",
+                          minWidth: "68px",
+                        }}
+                      >
+                        {s.ticker}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "var(--font-space-grotesk), sans-serif",
+                          fontSize: "0.9rem",
+                          color: "#52525B",
+                          flex: 1,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {s.name}
+                      </span>
+                      <span
+                        style={{
+                          padding: "0.15rem 0.5rem",
+                          borderRadius: "4px",
+                          backgroundColor: ts.bg,
+                          fontFamily: "var(--font-jetbrains-mono), monospace",
+                          fontSize: "0.68rem",
+                          color: ts.color,
+                          letterSpacing: "0.08em",
+                          textTransform: "uppercase",
+                          fontWeight: 600,
+                          flexShrink: 0,
+                        }}
+                      >
+                        {s.type}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           <button
@@ -175,88 +257,6 @@ export function TickerSearch({ onAdd, isLoading, error, onClearError }: TickerSe
           </button>
         </form>
 
-        {/* Autocomplete dropdown */}
-        {showDropdown && suggestions.length > 0 && (
-          <div
-            ref={dropdownRef}
-            style={{
-              position: "absolute",
-              top: "100%",
-              left: 0,
-              right: "calc(1.75rem + 0.75rem + 1px)",
-              backgroundColor: "#FFFFFF",
-              border: "1.5px solid #2563EB",
-              borderTop: "1px solid #E4E1DA",
-              borderRadius: "0 0 0.625rem 0.625rem",
-              overflow: "hidden",
-              zIndex: 100,
-              boxShadow: "0 8px 24px rgba(0,0,0,0.1), 0 0 0 3px rgba(37,99,235,0.08)",
-            }}
-          >
-            {suggestions.map((s, i) => {
-              const ts = TYPE_STYLE[s.type] ?? { color: "#71717A", bg: "#F9F9F8" };
-              return (
-                <div
-                  key={s.ticker}
-                  onMouseDown={() => handleSelect(s.ticker)}
-                  onMouseEnter={() => setHighlighted(i)}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1rem",
-                    padding: "0.75rem 1.25rem",
-                    cursor: "pointer",
-                    backgroundColor: i === highlighted ? "#F8F7FF" : "transparent",
-                    borderBottom: i < suggestions.length - 1 ? "1px solid #F4F2ED" : "none",
-                    transition: "background-color 0.1s",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: "var(--font-jetbrains-mono), monospace",
-                      fontSize: "0.95rem",
-                      fontWeight: 700,
-                      color: "#18181B",
-                      letterSpacing: "0.08em",
-                      minWidth: "68px",
-                    }}
-                  >
-                    {s.ticker}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: "var(--font-space-grotesk), sans-serif",
-                      fontSize: "0.9rem",
-                      color: "#52525B",
-                      flex: 1,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {s.name}
-                  </span>
-                  <span
-                    style={{
-                      padding: "0.15rem 0.5rem",
-                      borderRadius: "4px",
-                      backgroundColor: ts.bg,
-                      fontFamily: "var(--font-jetbrains-mono), monospace",
-                      fontSize: "0.68rem",
-                      color: ts.color,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      fontWeight: 600,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {s.type}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </div>
 
       {error && (

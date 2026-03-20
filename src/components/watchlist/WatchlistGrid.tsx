@@ -42,7 +42,7 @@ export function WatchlistGrid({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(420px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fill, minmax(min(420px, 100%), 1fr))",
         gap: "1.5rem",
       }}
     >

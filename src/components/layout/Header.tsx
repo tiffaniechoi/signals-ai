@@ -48,10 +48,9 @@ export function Header() {
       }}
     >
       <div
+        className="header-padding"
         style={{
           width: "100%",
-          padding: "0 3rem",
-          height: "72px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -74,7 +73,7 @@ export function Header() {
             <span
               style={{
                 fontFamily: "var(--font-jetbrains-mono), monospace",
-                fontSize: "1.5rem",
+                fontSize: "clamp(1.1rem, 4vw, 1.5rem)",
                 fontWeight: 700,
                 color: "#18181B",
                 letterSpacing: "0.12em",
@@ -103,7 +102,7 @@ export function Header() {
         </div>
 
         {/* Nav */}
-        <nav style={{ display: "flex", alignItems: "center", gap: "2.5rem" }}>
+        <nav className="header-nav">
           {navLink("/", "Markets")}
           {navLink("/watchlist", "My Watchlist")}
         </nav>

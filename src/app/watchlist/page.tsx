@@ -14,14 +14,15 @@ export default function WatchlistPage() {
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Header />
 
-      <main style={{ flex: 1, width: "100%", padding: "2.5rem 3rem", display: "flex", flexDirection: "column", gap: "2rem" }}>
+      <main className="page-padding" style={{ flex: 1, width: "100%", display: "flex", flexDirection: "column", gap: "2rem" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }}>
             <div>
               <h1
+                className="page-h1"
                 style={{
                   fontFamily: "var(--font-jetbrains-mono), monospace",
-                  fontSize: "2.5rem", fontWeight: 700, color: "#18181B",
+                  fontWeight: 700, color: "#18181B",
                   margin: "0 0 0.375rem", letterSpacing: "0.04em",
                 }}
               >
