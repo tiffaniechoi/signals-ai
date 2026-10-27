@@ -6,7 +6,7 @@ import { WatchlistGrid } from "@/components/watchlist/WatchlistGrid";
 import { useMarkets } from "@/hooks/useMarkets";
 
 export default function MarketsPage() {
-  const { watchlist, analyses, loading, errors, refreshTicker, refreshAll } = useMarkets();
+  const { watchlist, analyses, loading, errors, refreshTicker, refreshAll, removeTicker } = useMarkets();
   const anyLoading = loading.size > 0;
 
   return (
@@ -59,7 +59,7 @@ export default function MarketsPage() {
           </button>
         </div>
 
-        <WatchlistGrid watchlist={watchlist} analyses={analyses} loading={loading} errors={errors} onRemove={() => {}} onRefresh={refreshTicker} readOnly />
+        <WatchlistGrid watchlist={watchlist} analyses={analyses} loading={loading} errors={errors} onRemove={removeTicker} onRefresh={refreshTicker} showEmptyState={false} />
       </main>
 
       <Footer />

@@ -5,7 +5,7 @@
  *
  * Renders a LoadingCard while a ticker is being fetched, an error card if
  * the fetch failed, and the full StockCard once analysis is available.
- * Shows EmptyState when the watchlist is empty (non-readOnly pages only).
+ * Shows EmptyState when enabled and the watchlist is empty.
  */
 import { AnimatePresence } from "framer-motion";
 import type { TrackedSecurity, StockAnalysis } from "@/types";
@@ -21,7 +21,7 @@ interface WatchlistGridProps {
   onRemove: (ticker: string) => void;
   onRefresh: (ticker: string) => void;
   onAdd?: (ticker: string) => void;
-  readOnly?: boolean;
+  showEmptyState?: boolean;
 }
 
 export function WatchlistGrid({
@@ -32,9 +32,9 @@ export function WatchlistGrid({
   onRemove,
   onRefresh,
   onAdd,
-  readOnly = false,
+  showEmptyState = true,
 }: WatchlistGridProps) {
-  if (watchlist.length === 0 && !readOnly) {
+  if (watchlist.length === 0 && showEmptyState) {
     return <EmptyState onAdd={onAdd ?? (() => {})} />;
   }
 
@@ -137,7 +137,6 @@ export function WatchlistGrid({
               analysis={analysis}
               onRemove={onRemove}
               onRefresh={onRefresh}
-              readOnly={readOnly}
             />
           );
         })}

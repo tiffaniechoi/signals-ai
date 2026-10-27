@@ -6,7 +6,6 @@
  * A 4px left border is colored by sentiment so the entire grid is
  * scannable at a glance without reading individual labels.
  * News is collapsed to 2 items with a "Show more" toggle to keep cards compact.
- * In readOnly mode the Remove button is hidden.
  */
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -18,7 +17,6 @@ interface StockCardProps {
   analysis: StockAnalysis;
   onRemove: (ticker: string) => void;
   onRefresh: (ticker: string) => void;
-  readOnly?: boolean;
 }
 
 function formatPrice(price: number): string {
@@ -43,7 +41,7 @@ const SENTIMENT_COLOR: Record<Sentiment, string> = {
 
 const NEWS_PREVIEW = 2; // items shown before "Show more"
 
-export function StockCard({ analysis, onRemove, onRefresh, readOnly = false }: StockCardProps) {
+export function StockCard({ analysis, onRemove, onRefresh }: StockCardProps) {
   const { quote, news, sentiment } = analysis;
   const [showAllNews, setShowAllNews] = useState(false);
 
@@ -321,30 +319,28 @@ export function StockCard({ analysis, onRemove, onRefresh, readOnly = false }: S
           >
             ↻ Refresh
           </button>
-          {!readOnly && (
-            <button
-              onClick={() => onRemove(quote.ticker)}
-              title="Remove from watchlist"
-              style={{
-                padding: "0.45rem 0.875rem", borderRadius: "0.375rem",
-                backgroundColor: "transparent", border: "1px solid #E4E1DA",
-                color: "#71717A", fontFamily: "var(--font-space-grotesk), sans-serif",
-                fontSize: "0.875rem", fontWeight: 500, cursor: "pointer", transition: "all 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = "#DC2626";
-                e.currentTarget.style.color = "#DC2626";
-                e.currentTarget.style.backgroundColor = "#FEF2F2";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = "#E4E1DA";
-                e.currentTarget.style.color = "#71717A";
-                e.currentTarget.style.backgroundColor = "transparent";
-              }}
-            >
-              ✕ Remove
-            </button>
-          )}
+          <button
+            onClick={() => onRemove(quote.ticker)}
+            title="Remove from list"
+            style={{
+              padding: "0.45rem 0.875rem", borderRadius: "0.375rem",
+              backgroundColor: "transparent", border: "1px solid #E4E1DA",
+              color: "#71717A", fontFamily: "var(--font-space-grotesk), sans-serif",
+              fontSize: "0.875rem", fontWeight: 500, cursor: "pointer", transition: "all 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "#DC2626";
+              e.currentTarget.style.color = "#DC2626";
+              e.currentTarget.style.backgroundColor = "#FEF2F2";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "#E4E1DA";
+              e.currentTarget.style.color = "#71717A";
+              e.currentTarget.style.backgroundColor = "transparent";
+            }}
+          >
+            ✕ Remove
+          </button>
         </div>
       </div>
     </motion.div>
