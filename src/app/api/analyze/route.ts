@@ -15,7 +15,7 @@ import { rateLimit } from "@/lib/rateLimit";
 
 // Groq Chat Completions endpoint — free tier: 1,000 req/day, 6,000 req/min
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
-const GROQ_MODEL = "llama-3.3-70b-versatile";
+const GROQ_MODEL = "openai/gpt-oss-20b";
 
 /** Fetches the latest quote for a ticker from Yahoo Finance. Returns null on any error. */
 async function fetchQuote(ticker: string): Promise<StockQuote | null> {
